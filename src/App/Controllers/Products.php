@@ -77,4 +77,18 @@ class Products
 
         return $response;
     }
+
+    public function delete(Request $request, Response $response, string $id): Response
+    {
+        $rows = $this->repository->delete($id);
+
+        $body = json_encode([
+            'rows' => $rows,
+            'message' => 'Product deleted'
+        ]);
+
+        $response->getBody()->write($body);
+
+        return $response;
+    }
 }

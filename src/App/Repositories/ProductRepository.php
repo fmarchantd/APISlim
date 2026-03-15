@@ -72,4 +72,19 @@ class ProductRepository
         return $stmt->rowCount();
 
     }
+
+    public function delete(string $id): int
+    {
+        $sql = 'DELETE FROM products WHERE id = :id';
+
+        $pdo = $this->database->getConnection();
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
 }

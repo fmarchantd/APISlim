@@ -42,7 +42,10 @@ $app->get('/api/products/{id: [0-9]+}', App\Controllers\Products::class . ':show
 
 $app->post('/api/products', [App\Controllers\Products::class, 'create']);
 
-$app->put('/api/products/{id: [0-9]+}', App\Controllers\Products::class . ':update')
+$app->patch('/api/products/{id: [0-9]+}', App\Controllers\Products::class . ':update')
+    ->add(App\Middleware\GetProductById::class);
+
+$app->delete('/api/products/{id: [0-9]+}', App\Controllers\Products::class . ':delete')
     ->add(App\Middleware\GetProductById::class);
 
 $app->run();
