@@ -1,7 +1,2 @@
 ### GET ALL
-POST http://localhost:8080/api/products
-Content-Type: application/json
-
-{
-  "name": "Cuatro"
-}
+GET http://localhost:8080/api/products/1

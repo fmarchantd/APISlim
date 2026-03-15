@@ -53,4 +53,23 @@ class ProductRepository
 
         return $pdo->lastInsertId();
     }
+
+    public function update(int $id, array $data): int
+    {
+        $sql = 'UPDATE products SET name = :name, description = :description, size = :size WHERE id = :id';
+
+        $pdo = $this->database->getConnection();
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindValue(':name', $data['name'],PDO::PARAM_STR);
+        $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
+        $stmt->bindValue(':size', $data['size'], PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->rowCount();
+
+    }
 }
