@@ -7,11 +7,17 @@ namespace App\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Repositories\ProductRepository;
+use Valitron\Validator;
 
 class Products
 {
-    public function __construct(private ProductRepository $repository)
+    public function __construct(private ProductRepository $repository, private Validator $validator)
     {
+        $this->validator->mapFieldsRules([
+            'name' => ['required'],
+            'description' => ['required'],
+            'size' => ['required', 'integer', ['min', 1]],
+        ]);
     }
     public function show(Request $request, Response $response, string $id): Response
     {
@@ -27,6 +33,14 @@ class Products
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
+
+        $this->validator = $this->validator->withData($body);
+
+        if (!$this->validator->validate()) {
+            $response->getBody()->write(json_encode($this->validator->errors()));
+
+            return $response->withStatus(422);
+        }
 
         $id = $this->repository->create($body);
 
